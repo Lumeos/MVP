@@ -1,5 +1,5 @@
-# MERN Stack Starter Repo
-A Repo to quickly get started with npm dependencies (e.g., webpack, react, etc)  based on the MERN stack (Mongo, Express, ReactJS &amp; NodeJS) with appropriate dependencies.
+# Lumeos App
+React based App for Lumeos
 
 #Installation
 1. Install dependencies: `npm install`

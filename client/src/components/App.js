@@ -1,5 +1,10 @@
 import React from 'react';
-import Component from './Component'
+import Home from './Home';
+import { Route, Switch } from 'react-router-dom';
+import LoginForm from './Login';
+import SignUp from './Signup';
+import 'semantic-ui-css/semantic.min.css';
+
 
 class App extends React.Component {
   constructor(props){
@@ -12,10 +17,12 @@ class App extends React.Component {
   }
 
   render () {
-    return (<div> 
-              <h1>MERN Starter Kit</h1>
-              This is your App!
-              <Component />
+    return (<div>
+              <Switch> 
+                <Route exact path='/' component={Home} />
+                <Route exact path='/signin' component={LoginForm} />
+                <Route exact path='/signup' component={SignUp} />
+              </Switch>
             </div>);
   }
 }

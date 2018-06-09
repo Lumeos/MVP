@@ -1,6 +1,19 @@
+
+html, body{
+  margin:0; /* CSS Resets */
+  padding:0;
+}
+
 body{
   font-size: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: honeydew;
-  color: seagreen;
+  font-family: Roboto, Helvetica, sans-serif;
+  background-color: white;
+}
+
+#splashpage-welcome-text{
+  color: lightgrey;
+}
+
+#signup-button{
+  background-color: #25c4e2; /*lumeos blue */
 }

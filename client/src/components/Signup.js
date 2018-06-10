@@ -39,7 +39,7 @@ class SignUp extends React.Component {
           }
         `}</style>
         <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-          <Grid.Column style={{ maxWidth: 350, marginTop: 100 }}>
+          <Grid.Column style={{ maxWidth: 350, marginTop: 150 }}>
             <Image as={Link} to='/' src='static/images/lumeos_logo.png' size='medium' centered={true} style={{marginTop:80}}/>
             <Form size='large' style={FormStyle}>
               <Segment stacked>

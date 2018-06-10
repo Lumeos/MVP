@@ -13,16 +13,21 @@ class SignUp extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      value: 'male'
+      name: '',
+      email: '',
+      gender: 'male',
+      number: '',
+      location: '',
+      school: '',
+      employer: ''
     }
   }
   
-  handleChange(e, selection){
-    this.setState({ value: selection.value });
+  handleChange(e, selection, optionType){
+    this.setState({ [optionType]: selection.value }); //change state to passed in option type
   } 
 
   render() {
-    const { value } = this.state;
 
     return (
       <div className='login-form'>
@@ -43,27 +48,27 @@ class SignUp extends React.Component {
             <Image as={Link} to='/' src='static/images/lumeos_logo.png' size='medium' centered={true} style={{marginTop:80}}/>
             <Form size='large' style={FormStyle}>
               <Segment stacked>
-                <Form.Input fluid placeholder='Name' />
-                <Form.Input fluid placeholder='Email' />
-                <Form.Input fluid placeholder='Phone' type='number' />
+                <Form.Input fluid placeholder='Name' value={this.state.name} onChange={(e,selection)=>this.handleChange(e, selection,'name')}/>
+                <Form.Input fluid placeholder='Email' value={this.state.email} onChange={(e,selection)=>this.handleChange(e, selection,'email')}/>
+                <Form.Input fluid placeholder='Phone' value={this.state.phone} type='number' onChange={(e,selection)=>this.handleChange(e, selection,'number')}/>
                 <Form.Group inline>
                   <label>Size</label>
                   <Form.Radio
                     label='Male'
                     value='male'
-                    checked={this.state.value === 'male'}
-                    onChange={this.handleChange.bind(this)}
+                    checked={this.state.gender === 'male'}
+                    onChange={(e,selection)=>this.handleChange(e, selection,'gender')}
                   />
                   <Form.Radio
                     label='Female'
                     value='female'
-                    checked={this.state.value === 'female'}
-                    onChange={this.handleChange.bind(this)}
+                    checked={this.state.gender === 'female'}
+                    onChange={(e,selection)=>this.handleChange(e, selection,'gender')}
                   />
                 </Form.Group>
-                <Form.Input fluid placeholder='Location' />
-                <Form.Input fluid placeholder='School' />
-                <Form.Input fluid placeholder='Employer' />
+                <Form.Input fluid placeholder='Location' value={this.state.location} onChange={(e,selection)=>this.handleChange(e, selection,'location')}/>
+                <Form.Input fluid placeholder='School' value={this.state.school} onChange={(e,selection)=>this.handleChange(e, selection,'school')}/>
+                <Form.Input fluid placeholder='Employer' value={this.state.employer} onChange={(e,selection)=>this.handleChange(e, selection,'employer')}/>
                 <Form.Checkbox label={<label> I agree to the {<TermsAndConditionsModal />}</label>} />
                 <Button fluid size='big' style={ButtonStyle} id="signin-button">
                   Create Account

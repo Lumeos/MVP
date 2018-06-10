@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Icon } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Icon } from 'semantic-ui-react';
 import { ButtonStyle, SignInStyle, LinkStyle } from './styles';
+import TermsAndConditionsModal from './Terms-and-conditions';
 
 const FormStyle = {
   marginTop: '2em'
@@ -63,7 +64,7 @@ class SignUp extends React.Component {
                 <Form.Input fluid placeholder='Location' />
                 <Form.Input fluid placeholder='School' />
                 <Form.Input fluid placeholder='Employer' />
-                <Form.Checkbox label={<label> I agree to the <Link to='#' style={LinkStyle}>Terms and Conditions</Link></label>} />
+                <Form.Checkbox label={<label> I agree to the {<TermsAndConditionsModal />}</label>} />
                 <Button fluid size='big' style={ButtonStyle} id="signin-button">
                   Create Account
                 </Button>
@@ -71,6 +72,15 @@ class SignUp extends React.Component {
             </Form>
             <div>
               <Divider horizontal>or</Divider>
+                <Button 
+                  as={Link} 
+                  to='/signin' 
+                  fluid 
+                  size='big' 
+                  style={ButtonStyle} 
+                  id="signup-button">
+                  Sign In
+                </Button>
                 <Button fluid color='facebook'size='big' style={ButtonStyle}>
                   <Icon name='facebook' /> Facebook
                 </Button>

@@ -52,7 +52,7 @@ class SignUp extends React.Component {
                 <Form.Input fluid placeholder='Email' value={this.state.email} onChange={(e,selection)=>this.handleChange(e, selection,'email')}/>
                 <Form.Input fluid placeholder='Phone' value={this.state.phone} type='number' onChange={(e,selection)=>this.handleChange(e, selection,'number')}/>
                 <Form.Group inline>
-                  <label>Size</label>
+                  <label>Gender</label>
                   <Form.Radio
                     label='Male'
                     value='male'

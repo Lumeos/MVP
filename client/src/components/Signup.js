@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Icon } from 'semantic-ui-react';
+import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Icon, Input } from 'semantic-ui-react';
 import { ButtonStyle, SignInStyle, LinkStyle } from './styles';
 import TermsAndConditionsModal from './Terms-and-conditions';
 
@@ -19,7 +19,8 @@ class SignUp extends React.Component {
       number: '',
       location: '',
       school: '',
-      employer: ''
+      employer: '',
+      birthday: '1980-01-01'
     }
   }
   
@@ -52,7 +53,7 @@ class SignUp extends React.Component {
                 <Form.Input fluid placeholder='Email' value={this.state.email} onChange={(e,selection)=>this.handleChange(e, selection,'email')}/>
                 <Form.Input fluid placeholder='Phone' value={this.state.phone} type='number' onChange={(e,selection)=>this.handleChange(e, selection,'number')}/>
                 <Form.Group inline>
-                  <label>Gender</label>
+                  <label style={{'fontWeight':'normal'}}>Gender</label>
                   <Form.Radio
                     label='Male'
                     value='male'
@@ -65,6 +66,10 @@ class SignUp extends React.Component {
                     checked={this.state.gender === 'female'}
                     onChange={(e,selection)=>this.handleChange(e, selection,'gender')}
                   />
+                </Form.Group>
+                <Form.Group inline>
+                  <label style={{'fontWeight':'normal'}}>Date of Birth</label>
+                  <Input type='date' value={this.state.birthday} onChange={(e,selection)=>this.handleChange(e, selection,'birthday')}/>
                 </Form.Group>
                 <Form.Input fluid placeholder='Location' value={this.state.location} onChange={(e,selection)=>this.handleChange(e, selection,'location')}/>
                 <Form.Input fluid placeholder='School' value={this.state.school} onChange={(e,selection)=>this.handleChange(e, selection,'school')}/>

@@ -1,5 +1,5 @@
 <p align="center">
-<img src="/doc/lumeos-logo.png" width="600">
+<img src="/client/dist/static/images/lumeos_logo.png" width="600">
 </p>
 
 # Lumeos App

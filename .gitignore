@@ -3,3 +3,5 @@ node_modules
 bundle.js
 client/dist/Lumeous-Assetts
 lumeos-test-key.pem
+localhost.key
+localhost.crt

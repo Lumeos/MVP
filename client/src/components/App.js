@@ -1,8 +1,9 @@
 import React from 'react';
-import Home from './Home';
+import SplashPage from './SplashPage';
 import { Route, Switch } from 'react-router-dom';
 import LoginForm from './Login';
 import SignUp from './Signup';
+import Home from './Home';
 import 'semantic-ui-css/semantic.min.css';
 
 
@@ -12,16 +13,13 @@ class App extends React.Component {
     this.state = {}
   }
 
-  componentWillMount(){
-
-  }
-
   render () {
     return (<div>
               <Switch> 
-                <Route exact path='/' component={Home} />
+                <Route exact path='/' component={SplashPage} />
                 <Route exact path='/signin' component={LoginForm} />
                 <Route exact path='/signup' component={SignUp} />
+                <Route exact path='/home' component={Home} />
               </Switch>
             </div>);
   }

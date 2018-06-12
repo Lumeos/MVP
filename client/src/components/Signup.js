@@ -23,7 +23,39 @@ class SignUp extends React.Component {
       birthday: '1980-01-01'
     }
   }
-  
+
+  componentDidMount(){
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : process.env.FB_APP_ID,
+          cookie     : true,
+          xfbml      : true,
+          version    : 'v3.0'
+        });
+          
+        FB.AppEvents.logPageView();   
+          
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+  }
+
+  FacebookLogin(){
+    //do the login
+      FB.login(function(response) {
+        if (response.authResponse) {
+          //user just authorized your app
+          console.log('user logged in', response)
+        }
+      }, {scope: 'email,public_profile', return_scopes: true});
+  }
+   
   handleChange(e, selection, optionType){
     this.setState({ [optionType]: selection.value }); //change state to passed in option type
   } 
@@ -91,7 +123,7 @@ class SignUp extends React.Component {
                   id="signup-button">
                   Sign In
                 </Button>
-                <Button fluid color='facebook'size='big' style={ButtonStyle}>
+                <Button id="loginBtn" fluid color='facebook'size='big' style={ButtonStyle} onClick={this.FacebookLogin.bind(this)}>
                   <Icon name='facebook' /> Facebook
                 </Button>
                 <Button fluid color='twitter' size='big' style={ButtonStyle}>

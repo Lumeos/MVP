@@ -23,3 +23,7 @@ body{
 #signup-button:hover, #signin-button:hover{
   background-color: #29A7C2; /*Dimmed lumeos blue */
 }
+
+#fb-root{
+  display:none;
+}

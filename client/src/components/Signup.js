@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Icon, Input } from 'semantic-ui-react';
 import { ButtonStyle, SignInStyle, LinkStyle } from './styles';
 import TermsAndConditionsModal from './Terms-and-conditions';
+import { Redirect } from 'react-router-dom';
+import { FacebookLogin } from './helpers/HelperFunctions'
 
 const FormStyle = {
   marginTop: '2em'
@@ -20,40 +22,28 @@ class SignUp extends React.Component {
       location: '',
       school: '',
       employer: '',
-      birthday: '1980-01-01'
+      birthday: '1980-01-01',
+      loggedin: false
     }
   }
 
-  componentDidMount(){
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : process.env.FB_APP_ID,
-          cookie     : true,
-          xfbml      : true,
-          version    : 'v3.0'
-        });
-          
-        FB.AppEvents.logPageView();   
-          
-      };
-
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "https://connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-  }
 
   FacebookLogin(){
-    //do the login
-      FB.login(function(response) {
-        if (response.authResponse) {
-          //user just authorized your app
-          console.log('user logged in', response)
+    
+    let context = this;
+
+    //Perform the login
+    FB.login(function(response) {
+      if (response.authResponse) {
+        //user just authorized your app
+        console.log('user logged in', response);
+
+        if (response.status === 'connected'){
+          context.setState({loggedin: true});
         }
-      }, {scope: 'email,public_profile', return_scopes: true});
+
+      }
+    }, {scope: 'email,public_profile', return_scopes: true});
   }
    
   handleChange(e, selection, optionType){
@@ -61,6 +51,12 @@ class SignUp extends React.Component {
   } 
 
   render() {
+
+     //Redirect to Home if user is loggedin
+     if (this.state.loggedin) {
+       return <Redirect to='/home'/>;
+     }
+
 
     return (
       <div className='login-form'>
@@ -123,7 +119,8 @@ class SignUp extends React.Component {
                   id="signup-button">
                   Sign In
                 </Button>
-                <Button id="loginBtn" fluid color='facebook'size='big' style={ButtonStyle} onClick={this.FacebookLogin.bind(this)}>
+                <div id="fb-root"></div>
+                <Button id="loginBtn" fluid color='facebook' size='big' style={ButtonStyle} onClick={this.FacebookLogin.bind(this)}>
                   <Icon name='facebook' /> Facebook
                 </Button>
                 <Button fluid color='twitter' size='big' style={ButtonStyle}>

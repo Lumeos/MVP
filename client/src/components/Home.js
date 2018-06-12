@@ -1,47 +1,68 @@
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
-import { Button, Grid, Header, Image, Message, Icon } from 'semantic-ui-react'
-import { GridStyle, ButtonStyle, SignInStyle, SplashHeaderStyle } from './styles';
+import { Card, Icon, Image, Grid } from 'semantic-ui-react'
+import { Redirect } from 'react-router-dom';
 
+class Home extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loggedin: false
+    }
+  }
 
-const Home = (props) => {
+  componentDidMount(){
 
-  return (
-   <div className="splashpage">
-    <style>{`
-      body > div,
-      body > div > div,
-      body > div > div > div.splashpage {
-        height: 100%;
-      }
-    `}
-    </style>
-    <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-      <Grid.Column style={GridStyle}>
-        <Image as={Link} to='/'src='static/images/lumeos_logo.png' size='medium' centered={true} style={{'marginBottom': '1em'}} />
-        <Image src='static/images/icon_lock.png' centered={true} style={{'marginBottom': '1em'}} />
-        <Header as='h2' textAlign='center' style={SplashHeaderStyle}>
-          Privacy
-        </Header>
-        <p id='splashpage-welcome-text'>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ullamcorper est eu lacus. 
-        </p>
-          <Button 
-            as={Link} 
-            to='/signup' 
-            fluid 
-            size='big' 
-            style={ButtonStyle} 
-            id="signup-button"
-            onMouseOver={()=>console.log('hovered')}
-            onClick={()=>console.log('clicked')}>
-              Sign Up
-          </Button>
-        <Link to='/signin'><p style={SignInStyle}>Already a User</p></Link>
-      </Grid.Column>
-    </Grid>
-  </div>)
+    FB.api('/me', {fields: 'id,name,first_name,last_name,email'}, (response)=>{
 
+        this.setState({loggedin: true});
+        if (response.error){
+          //handle error 
+        }
+        console.log('Successful login for: ', response);
+        this.setState({
+          firstName: response.first_name,
+          lastName: response.last_name,
+          fullName: response.name,
+          id: response.id,
+          email: response.email,
+        })
+      });
+
+  }
+
+  render(){
+
+    // if (!this.state.loggedin) {
+    //    return <Redirect to='/signin'/>;
+    // }
+
+    return (
+      <div>
+        <Grid textAlign='center' style={{ height: '100%'}} verticalAlign='middle'>
+          <Grid.Column style={{ maxWidth: 350, marginTop: 150 }}>
+            <CardExampleCard {...this.state} />
+          </Grid.Column>
+        </Grid>
+      </div>)
+  }
 }
 
+
+const CardExampleCard = (props) => (
+
+  <Card>
+    <Image src='static/images/lumeos_logo.png' />
+    <Card.Content>
+      <Card.Header>Logged in as:<br/> {props.fullName}</Card.Header>
+      <Card.Meta>
+        <span className='date'>id: {props.id}</span>
+      </Card.Meta>
+      <Card.Description>Email: {props.email}</Card.Description>
+    </Card.Content>
+  </Card>
+)
+
 export default Home;
+
+

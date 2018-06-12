@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+const dotenv = require('dotenv-webpack');
 
 var BUILD_DIR = path.resolve(__dirname, 'client/dist');
 var APP_DIR = path.resolve(__dirname, 'client/src');
@@ -9,6 +10,9 @@ var config = {
   output: {
     path: BUILD_DIR,
     filename: 'bundle.js'
+  },
+  node: {
+    fs: 'empty' //used to not throw 'fs' error for .env
   },
   module : {
     rules : [
@@ -39,9 +43,11 @@ var config = {
           name: 'static/media/[name].[hash:8].[ext]',
         }
       }
-
     ]
-  }
+  },
+  plugins: [
+    new dotenv()
+  ]
 
 };
 

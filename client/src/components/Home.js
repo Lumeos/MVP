@@ -5,13 +5,15 @@ import { Redirect } from 'react-router-dom';
 
 class Home extends React.Component {
   constructor(props){
-    super(props);
+    super(props);;
     this.state = {
-      loggedin: false
+      loggedin: this.props.location.state ? this.props.location.state.loggedin: false //check if a valid state object is passed or a user went directly to URL
     }
   }
 
   componentDidMount(){
+
+    // console.log('here are passed props', this.props.location.state.loggedin)
 
     FB.api('/me', {fields: 'id,name,first_name,last_name,email'}, (response)=>{
 
@@ -33,9 +35,10 @@ class Home extends React.Component {
 
   render(){
 
-    // if (!this.state.loggedin) {
-    //    return <Redirect to='/signin'/>;
-    // }
+    if (!this.state.loggedin) {
+       console.log('entering annoying')
+       return <Redirect to='/signin'/>;
+    }
 
     return (
       <div>

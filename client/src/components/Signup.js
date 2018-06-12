@@ -4,7 +4,6 @@ import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Icon, Inp
 import { ButtonStyle, SignInStyle, LinkStyle } from './styles';
 import TermsAndConditionsModal from './Terms-and-conditions';
 import { Redirect } from 'react-router-dom';
-import { FacebookLogin } from './helpers/HelperFunctions'
 
 const FormStyle = {
   marginTop: '2em'
@@ -54,9 +53,13 @@ class SignUp extends React.Component {
 
      //Redirect to Home if user is loggedin
      if (this.state.loggedin) {
-       return <Redirect to='/home'/>;
+       return <Redirect to={{
+          pathname:'/home', 
+          state: {
+            loggedin: this.state.loggedin
+          }
+        }} />;
      }
-
 
     return (
       <div className='login-form'>

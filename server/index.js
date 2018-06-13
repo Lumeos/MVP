@@ -16,7 +16,7 @@ app.use(express.static('./client/dist'));
 app.use(router);
 
 const PORT_HTTP = process.env.PORT || 3000;
-const PORT_HTTPS = process.env.PORT || 4000;
+const PORT_HTTPS = process.env.PORT_HTTPS || 4000;
 
 app.listen(PORT_HTTP, ()=>console.log(`HTTP Listening on PORT ${PORT_HTTP}!`));
 

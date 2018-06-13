@@ -5,7 +5,7 @@
 # Lumeos App
 React based App for Lumeos
 
-#Installation
+# Installation
 1. Install dependencies: `npm install`
 2. Start Webpack in Dev mode: `npm run dev`,
 3. Start server: `npm start`

@@ -30,6 +30,7 @@
     "express": "^4.16.3",
     "file-loader": "^1.1.11",
     "forever": "^0.15.3",
+    "jsonwebtoken": "^8.3.0",
     "morgan": "^1.9.0",
     "nodemon": "^1.17.5",
     "react": "^16.3.1",

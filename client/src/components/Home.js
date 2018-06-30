@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
-import { Card, Icon, Image, Grid } from 'semantic-ui-react'
+import { Button, Card, Icon, Image, Grid } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom';
 
 class Home extends React.Component {
@@ -11,32 +11,70 @@ class Home extends React.Component {
     }
   }
 
-  componentDidMount(){
 
-    // console.log('here are passed props', this.props.location.state.loggedin)
-
-    FB.api('/me', {fields: 'id,name,first_name,last_name,email'}, (response)=>{
-
-        this.setState({loggedin: true});
-        if (response.error){
-          //handle error 
-        }
-        console.log('Successful login for: ', response);
-        this.setState({
-          firstName: response.first_name,
-          lastName: response.last_name,
-          fullName: response.name,
-          id: response.id,
-          email: response.email,
+  initializeReferralSaasquatchUser(){
+    // when squatch.js is ready to use
+      window.squatch.ready(function(){
+        console.log('saasquatch in action')
+       //configure squatch.js for the tenant you are using
+       squatch.init({
+        tenantAlias: 'test_a4c3vl89elaon'
+       });
+       //object containing the init parameters for squatch.js
+       var initObj = {
+         //the object for the user you want to upsert
+         user: {
+           id: 'abc_123',
+           accountId: 'abc_123',
+           email: 'john@example.com',
+           firstName: 'John',
+           lastName: 'Doe',
+           referable: false
+         },
+         engagementMedium: 'POPUP',
+         widgetType: 'REFERRER_WIDGET',
+         jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiYWJjXzEyMyIsImFjY291bnRJZCI6ImFiY18xMjMiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJEb2UiLCJyZWZlcmFibGUiOmZhbHNlfX0.ldC0eDjA2-OUDgBrXbN2EbJiPtjpm7XizVB50HIn144'
+        };
+      
+       //update/register a referral participant and display a widget
+      squatch.widgets().upsertUser(initObj)
+        .then(function(response) {
+          let user = response.user; 
         })
+        .catch(function(error){
+          console.log(error);
+        });
       });
+
+  }
+
+  async componentDidMount(){
+
+    let getFacebookUserData = ()=>{
+
+      FB.api('/me', {fields: 'id,name,first_name,last_name,email', access_token: window.sessionStorage.fbToken}, (response)=>{
+          this.setState({loggedin: true});
+          if (response.error){
+            //handle error 
+          }
+          console.log('Successful login for: ', response);
+          this.setState({
+            firstName: response.first_name,
+            lastName: response.last_name,
+            fullName: response.name,
+            id: response.id,
+            email: response.email,
+          })
+        });
+    }
+
+   await this.initializeReferralSaasquatchUser();
 
   }
 
   render(){
 
     if (!this.state.loggedin) {
-       console.log('entering annoying')
        return <Redirect to='/signin'/>;
     }
 
@@ -45,6 +83,7 @@ class Home extends React.Component {
         <Grid textAlign='center' style={{ height: '100%'}} verticalAlign='middle'>
           <Grid.Column style={{ maxWidth: 350, marginTop: 150 }}>
             <CardExampleCard {...this.state} />
+            <ReferralButton/>
           </Grid.Column>
         </Grid>
       </div>)
@@ -65,6 +104,12 @@ const CardExampleCard = (props) => (
     </Card.Content>
   </Card>
 )
+
+
+const ReferralButton = (props)=>
+  (<div>
+    <Button primary size="large" className="squatchpop">Refer a Friend</Button>
+   </div>)
 
 export default Home;
 

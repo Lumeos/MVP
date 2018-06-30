@@ -14,3 +14,5 @@ server.csr.cnf
 server.key
 v3.ext
 lumeos-aws-key.pem
+cert.pem
+key.pem

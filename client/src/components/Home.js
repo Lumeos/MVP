@@ -2,6 +2,8 @@ import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import { Button, Card, Icon, Image, Grid } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
+//import jwt from 'jsonwebtoken';
 
 class Home extends React.Component {
   constructor(props){
@@ -17,14 +19,15 @@ class Home extends React.Component {
 
   initializeReferralSaasquatchUser(user){
     // when squatch.js is ready to use
-      window.squatch.ready(function(){
+      window.squatch.ready(async function(){
         console.log('saasquatch in action')
        //configure squatch.js for the tenant you are using
        squatch.init({
         tenantAlias: 'test_a4c3vl89elaon'
        });
 
-      let temporaryId = Math.floor(Math.random() * 1000000000);
+
+       let temporaryId = Math.floor(Math.random() * 1000000000);
       
        //object containing the init parameters for squatch.js
        var initObj = {
@@ -36,12 +39,18 @@ class Home extends React.Component {
            firstName: user.first_name,
            lastName: user.last_name,
            imageUrl: "https://www.example.com/profile/ab5111251125",
+           referredBy: {
+             isConverted: true
+           }
          },
          engagementMedium: 'POPUP',
          widgetType: 'REFERRER_WIDGET',
-         jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiYWJjXzEyMyIsImFjY291bnRJZCI6ImFiY18xMjMiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJEb2UiLCJyZWZlcmFibGUiOmZhbHNlfX0.ldC0eDjA2-OUDgBrXbN2EbJiPtjpm7XizVB50HIn144'
+         //jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiYWJjXzEyMyIsImFjY291bnRJZCI6ImFiY18xMjMiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJEb2UiLCJyZWZlcmFibGUiOmZhbHNlfX0.ldC0eDjA2-OUDgBrXbN2EbJiPtjpm7XizVB50HIn144'
         };
       
+      let token = await axios.post('/api/v1/jwt', initObj)  
+
+      initObj.jwt = token.data;
        //update/register a referral participant and display a widget
       squatch.widgets().upsertUser(initObj)
         .then(function(response) {
@@ -83,7 +92,7 @@ class Home extends React.Component {
    fbLoaded.promise
    .then(()=>FB.getAuthResponse())
    .then((response)=>{
-      if (window.sessionStorage.fbToken === undefined && response !== undefined) {
+      if (window.sessionStorage.fbToken === undefined || response !== undefined) {
         window.sessionStorage.fbToken = response.accessToken;
       } else if (response === undefined && window.sessionStorage.fbToken === undefined) { 
         //no response from FB & no local FB token available....go back to home page

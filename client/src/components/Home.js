@@ -3,7 +3,7 @@ import { Route, Link } from 'react-router-dom';
 import { Button, Card, Icon, Image, Grid } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-//import jwt from 'jsonwebtoken';
+import { isMobileDevice } from './helpers/helpers';
 
 class Home extends React.Component {
   constructor(props){
@@ -67,8 +67,14 @@ class Home extends React.Component {
 
     let getFacebookUserData = ()=>{
 
+      let fbPayLoad = {fields: 'id,name,first_name,last_name,email'};
+
+      if (isMobileDevice() === false){
+        fbPayLoad.access_token = window.sessionStorage.fbToken;
+      }
+
       return new Promise((resolve) => {
-        FB.api('/me', {fields: 'id,name,first_name,last_name,email', access_token: window.sessionStorage.fbToken}, (response)=>{
+        FB.api('/me', fbPayLoad, (response)=>{
           
           resolve(response);
           this.setState({loggedin: true});

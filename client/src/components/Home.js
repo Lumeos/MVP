@@ -68,6 +68,19 @@ class Home extends React.Component {
         });
     }
 
+   fbLoaded.promise
+   .then(()=>FB.getAuthResponse())
+   .then((response)=>{
+      if (window.sessionStorage.fbToken === undefined && response !== undefined) {
+        window.sessionStorage.fbToken = response.accessToken;
+      } else if (response === undefined && window.sessionStorage.fbToken === undefined) { 
+        //no response from FB & no local FB token available....go back to home page
+        this.setState({loggedin: false})
+      }
+      
+    })
+   .then(getFacebookUserData);
+
    await this.initializeReferralSaasquatchUser();
 
   }

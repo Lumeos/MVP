@@ -7,12 +7,15 @@ class Home extends React.Component {
   constructor(props){
     super(props);;
     this.state = {
-      loggedin: this.props.location.state ? this.props.location.state.loggedin: false //check if a valid state object is passed or a user went directly to URL
+      loggedin: this.props.location.state ? this.props.location.state.loggedin: false, //check if a valid state object is passed or a user went directly to URL
+      email: '',
+      firstName: '',
+      lastName: '',
     }
   }
 
 
-  initializeReferralSaasquatchUser(){
+  initializeReferralSaasquatchUser(user){
     // when squatch.js is ready to use
       window.squatch.ready(function(){
         console.log('saasquatch in action')
@@ -20,16 +23,19 @@ class Home extends React.Component {
        squatch.init({
         tenantAlias: 'test_a4c3vl89elaon'
        });
+
+      let temporaryId = Math.floor(Math.random() * 1000000000);
+      
        //object containing the init parameters for squatch.js
        var initObj = {
          //the object for the user you want to upsert
          user: {
-           id: 'abc_123',
-           accountId: 'abc_123',
-           email: 'john@example.com',
-           firstName: 'John',
-           lastName: 'Doe',
-           referable: false
+           id: String(temporaryId), //NOTE: THIS SHOULD BE USING PHONE NUMBERS -- THIS IS A PLACEHOLDER
+           accountId: String(temporaryId),
+           email: user.email,
+           firstName: user.first_name,
+           lastName: user.last_name,
+           imageUrl: "https://www.example.com/profile/ab5111251125",
          },
          engagementMedium: 'POPUP',
          widgetType: 'REFERRER_WIDGET',
@@ -52,7 +58,10 @@ class Home extends React.Component {
 
     let getFacebookUserData = ()=>{
 
-      FB.api('/me', {fields: 'id,name,first_name,last_name,email', access_token: window.sessionStorage.fbToken}, (response)=>{
+      return new Promise((resolve) => {
+        FB.api('/me', {fields: 'id,name,first_name,last_name,email', access_token: window.sessionStorage.fbToken}, (response)=>{
+          
+          resolve(response);
           this.setState({loggedin: true});
           if (response.error){
             //handle error 
@@ -65,7 +74,10 @@ class Home extends React.Component {
             id: response.id,
             email: response.email,
           })
-        });
+
+        })
+
+      });
     }
 
    fbLoaded.promise
@@ -77,11 +89,9 @@ class Home extends React.Component {
         //no response from FB & no local FB token available....go back to home page
         this.setState({loggedin: false})
       }
-      
     })
-   .then(getFacebookUserData);
-
-   await this.initializeReferralSaasquatchUser();
+   .then(getFacebookUserData)
+   .then((response)=>this.initializeReferralSaasquatchUser(response));
 
   }
 

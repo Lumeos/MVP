@@ -6,9 +6,24 @@
     <link rel="icon" href="static/images/favicon.png" type="image/x-icon" /> 
     <title>Lumeos</title>
   </head>
+
   <body>
+    <!--Referral SaaSquatch JS lib-->
+    <script>
+      !function(a,b){a("squatch","https://d2rcp9ak152ke1.cloudfront.net/assets/javascripts/v2/squatch.min.js",b)}(function(a,b,c){var d,e,f;c["_"+a]={},c[a]={},c[a].ready=function(b){c["_" + a].ready = c["_" + a].ready || [];c["_" + a].ready.push(b);},e=document.createElement("script"),e.async=1,e.src=b,f=document.getElementsByTagName("script")[0],f.parentNode.insertBefore(e,f)},this);
+    </script>
+
     <!--FB Login Script -->
     <script> 
+      function Deferred() {
+        var self = this;
+        this.promise = new Promise(function(resolve, reject) {
+          self.reject = reject
+          self.resolve = resolve
+        })
+      }
+      window.fbLoaded = (new Deferred());
+
       window.fbAsyncInit = function() {
         FB.init({
           appId      : '527153217687130',
@@ -16,9 +31,9 @@
           xfbml      : true,
           version    : 'v3.0'
         });  
-
-        FB.AppEvents.logPageView();   
-          
+        
+        fbLoaded.resolve()
+        FB.AppEvents.logPageView();          
       };
 
       (function(d, s, id){

@@ -52,8 +52,6 @@ class Home extends React.Component {
          //update/register a referral participant and display a widget
         squatch.widgets().upsertUser(initObj)
         .then(function(response) {
-          console.log('Here is Request', JSON.stringify(initObj));
-          console.log('Here is Response',response);
           let user = response.user; 
         })
         .catch(function(error){
@@ -95,6 +93,10 @@ class Home extends React.Component {
       });
     }
 
+    let getUserId = ()=>{
+      return axios.post('https://server.lumeos.io/v1/users/', {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, password: null})
+    }
+
    fbLoaded.promise
    .then(()=>FB.getAuthResponse())
    .then((response)=>{
@@ -106,7 +108,10 @@ class Home extends React.Component {
       }
     })
    .then(getFacebookUserData)
-   .then((response)=>this.initializeReferralSaasquatchUser(response));
+   //.then(getUserId)
+   .then((response)=>{
+      this.initializeReferralSaasquatchUser(response);
+    });
 
 }
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Link, Redirect } from 'react-router-dom';
-import { Button, Grid, Header, Image, Message, Icon } from 'semantic-ui-react'
+import { Button, Grid, Header, Image, Message, Icon } from 'semantic-ui-react';
 import { GridStyle, ButtonStyle, SignInStyle, SplashHeaderStyle } from './styles';
-import { facebookLogin } from './helpers/helpers'
+import { facebookLogin } from './helpers/helpers';
 
 class Home extends React.Component { 
 
@@ -60,7 +60,7 @@ class Home extends React.Component {
           //<Link to='/signin'><p style={SignInStyle}>Already a User</p></Link> <--Hide normal sign up and add FB login
           }
           <Button id="loginBtn" fluid color='facebook' size='big' style={ButtonStyle} onClick={()=>facebookLogin(this.handleLogin.bind(this))} >
-            <Icon name='facebook' /> Facebook
+            <Icon name='facebook' /> Continue with Facebook
           </Button>
         </Grid.Column>
       </Grid>

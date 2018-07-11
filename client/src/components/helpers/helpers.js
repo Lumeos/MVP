@@ -13,7 +13,6 @@ let facebookLogin = function(callback){
 
       if (response.status === 'connected'){
         callback();
-        console.log('here is response', response);
         window.sessionStorage.fbToken = response.authResponse.accessToken;
       }
 

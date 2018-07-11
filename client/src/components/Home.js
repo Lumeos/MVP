@@ -23,7 +23,7 @@ class Home extends React.Component {
         console.log('saasquatch in action')
        //configure squatch.js for the tenant you are using
        squatch.init({
-        tenantAlias: 'test_a4c3vl89elaon'
+        tenantAlias: 'test_a4c3vl89elaon' // This is the TEST alias
        });
 
 
@@ -38,22 +38,22 @@ class Home extends React.Component {
            email: user.email,
            firstName: user.first_name,
            lastName: user.last_name,
-           imageUrl: "https://www.example.com/profile/ab5111251125",
            referredBy: {
              isConverted: true
            }
          },
          engagementMedium: 'POPUP',
          widgetType: 'REFERRER_WIDGET',
-         //jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiYWJjXzEyMyIsImFjY291bnRJZCI6ImFiY18xMjMiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJEb2UiLCJyZWZlcmFibGUiOmZhbHNlfX0.ldC0eDjA2-OUDgBrXbN2EbJiPtjpm7XizVB50HIn144'
         };
       
-      let token = await axios.post('/api/v1/jwt', initObj)  
+        let token = await axios.post('/api/v1/jwt', initObj)  
 
-      initObj.jwt = token.data;
-       //update/register a referral participant and display a widget
-      squatch.widgets().upsertUser(initObj)
+        initObj.jwt = token.data;
+         //update/register a referral participant and display a widget
+        squatch.widgets().upsertUser(initObj)
         .then(function(response) {
+          console.log('Here is Request', JSON.stringify(initObj));
+          console.log('Here is Response',response);
           let user = response.user; 
         })
         .catch(function(error){
@@ -75,7 +75,7 @@ class Home extends React.Component {
 
       return new Promise((resolve) => {
         FB.api('/me', fbPayLoad, (response)=>{
-          
+          console.log('here is ', response)
           resolve(response);
           this.setState({loggedin: true});
           if (response.error){
@@ -108,9 +108,9 @@ class Home extends React.Component {
    .then(getFacebookUserData)
    .then((response)=>this.initializeReferralSaasquatchUser(response));
 
-  }
+}
 
-  render(){
+render(){
 
     if (!this.state.loggedin) {
        return <Redirect to='/signin'/>;

@@ -16,3 +16,4 @@ v3.ext
 lumeos-aws-key.pem
 cert.pem
 key.pem
+config.json

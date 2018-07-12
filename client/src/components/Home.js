@@ -17,7 +17,13 @@ class Home extends React.Component {
   }
 
 
-  initializeReferralSaasquatchUser(user){
+  initializeReferralSaasquatchUser(response){
+
+      let user = {
+        email: this.state.email,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+      }
     // when squatch.js is ready to use
       window.squatch.ready(async function(){
         console.log('saasquatch in action')
@@ -26,18 +32,17 @@ class Home extends React.Component {
         tenantAlias: 'test_a4c3vl89elaon' // This is the TEST alias
        });
 
-
        let temporaryId = Math.floor(Math.random() * 1000000000);
       
        //object containing the init parameters for squatch.js
        var initObj = {
          //the object for the user you want to upsert
          user: {
-           id: String(temporaryId), //NOTE: THIS SHOULD BE USING PHONE NUMBERS -- THIS IS A PLACEHOLDER
-           accountId: String(temporaryId),
+           id: String(response.data.user_id), 
+           accountId: String(response.data.user_id),
            email: user.email,
-           firstName: user.first_name,
-           lastName: user.last_name,
+           firstName: user.firstName,
+           lastName: user.lastName,
            referredBy: {
              isConverted: true
            }
@@ -48,7 +53,7 @@ class Home extends React.Component {
       
         let token = await axios.post('/api/v1/jwt', initObj)  
 
-        initObj.jwt = token.data;
+        initObj.jwt = token.data; console.log('here is initObj',initObj)
          //update/register a referral participant and display a widget
         squatch.widgets().upsertUser(initObj)
         .then(function(response) {
@@ -93,8 +98,24 @@ class Home extends React.Component {
       });
     }
 
-    let getUserId = ()=>{
-      return axios.post('https://server.lumeos.io/v1/users/', {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, password: null})
+    let getUserId = async ()=>{
+      console.log('testing!!!',window.sessionStorage.lumeosToken )
+      // axios.defaults.headers.common['Authorization'] = `Bearer ${window.sessionStorage.lumeosToken}`;
+      // axios.defaults.headers.common['Content-Type'] = `application/json`;
+      
+      let config = {
+        headers: {
+          'Authorization': `Bearer ${window.sessionStorage.lumeosToken}`,
+          'Content-Type': 'application/json'
+        }
+      }
+      try{
+        return axios.post('http://localhost:8081/v1/users/', {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, password: 'facebook_password'}, config)
+      }
+      catch(err){
+        console.log(err)
+      }
+        
     }
 
    fbLoaded.promise
@@ -108,8 +129,9 @@ class Home extends React.Component {
       }
     })
    .then(getFacebookUserData)
-   //.then(getUserId)
+   .then(getUserId)
    .then((response)=>{
+      console.log('this is response',response)
       this.initializeReferralSaasquatchUser(response);
     });
 

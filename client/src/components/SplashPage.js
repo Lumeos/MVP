@@ -3,6 +3,7 @@ import { Route, Link, Redirect } from 'react-router-dom';
 import { Button, Grid, Header, Image, Message, Icon } from 'semantic-ui-react';
 import { GridStyle, ButtonStyle, SignInStyle, SplashHeaderStyle } from './styles';
 import { facebookLogin } from './helpers/helpers';
+import axios from 'axios';
 
 class Home extends React.Component { 
 
@@ -13,9 +14,12 @@ class Home extends React.Component {
     }
   }
 
-  handleLogin(){
+  async handleLogin(){
     console.log('inside')
     this.setState({loggedin:true});
+    let response = await axios.post('http://localhost:8081/v1/login', {"email" : "admin@lumeos.io", "password" : "test"});
+    window.sessionStorage.lumeosToken = response.data.token;
+    console.log('session token', response.data.token);
   }
 
 

@@ -118,11 +118,13 @@ class Home extends React.Component {
       // }
       try{
         let response =  await axios.post(`${CONFIG.LUMEOS_SERVER}/v1/users/`, {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email/*+Math.random()*/, password: 'facebook_password'})
+        console.log('Here is Lumeos Server Response', response.data);
         return response.data.user_id;
       }
       catch(err){
         console.log('could not create user, trying to find user in DB....', err);
         let response = await axios.get(`${CONFIG.LUMEOS_SERVER}/v1/users/`, {params:{ queryEmail:this.state.email }});
+        console.log('Here is Lumeos Server Response', response.data);
         return response.data[0].id;
         
       }

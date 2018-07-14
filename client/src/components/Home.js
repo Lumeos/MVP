@@ -4,6 +4,8 @@ import { Button, Card, Icon, Image, Grid } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { isMobileDevice } from './helpers/helpers';
+import CONFIG from '../../../config.json';
+
 
 class Home extends React.Component {
   constructor(props){
@@ -17,14 +19,15 @@ class Home extends React.Component {
   }
 
 
-  initializeReferralSaasquatchUser(response){
+  initializeReferralSaasquatchUser(userId){
 
-      let user = {
+      let loggedinUser = {
         email: this.state.email,
         firstName: this.state.firstName,
         lastName: this.state.lastName,
       }
-    // when squatch.js is ready to use
+
+      // when squatch.js is ready to use
       window.squatch.ready(async function(){
         console.log('saasquatch in action')
        //configure squatch.js for the tenant you are using
@@ -33,16 +36,18 @@ class Home extends React.Component {
        });
 
        let temporaryId = Math.floor(Math.random() * 1000000000);
-      
+       
+       console.log('here is user obj', loggedinUser)
+       
        //object containing the init parameters for squatch.js
        var initObj = {
          //the object for the user you want to upsert
          user: {
-           id: String(response.data.user_id), 
-           accountId: String(response.data.user_id),
-           email: user.email,
-           firstName: user.firstName,
-           lastName: user.lastName,
+           id: String(userId), 
+           accountId: String(userId),
+           email: loggedinUser.email,
+           firstName: loggedinUser.firstName,
+           lastName: loggedinUser.lastName,
            referredBy: {
              isConverted: true
            }
@@ -53,7 +58,9 @@ class Home extends React.Component {
       
         let token = await axios.post('/api/v1/jwt', initObj)  
 
-        initObj.jwt = token.data; console.log('here is initObj',initObj)
+        initObj.jwt = token.data; 
+
+        console.log('here is SaaSquatch Object to be sent', initObj)
          //update/register a referral participant and display a widget
         squatch.widgets().upsertUser(initObj)
         .then(function(response) {
@@ -62,6 +69,7 @@ class Home extends React.Component {
         .catch(function(error){
           console.log(error);
         });
+
       });
 
   }
@@ -99,21 +107,24 @@ class Home extends React.Component {
     }
 
     let getUserId = async ()=>{
-      console.log('testing!!!',window.sessionStorage.lumeosToken )
-      // axios.defaults.headers.common['Authorization'] = `Bearer ${window.sessionStorage.lumeosToken}`;
-      // axios.defaults.headers.common['Content-Type'] = `application/json`;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${window.sessionStorage.lumeosToken}`;
+      axios.defaults.headers.common['Content-Type'] = `application/json`;
       
-      let config = {
-        headers: {
-          'Authorization': `Bearer ${window.sessionStorage.lumeosToken}`,
-          'Content-Type': 'application/json'
-        }
-      }
+      // let config = {
+      //   headers: {
+      //     'Authorization': `Bearer ${window.sessionStorage.lumeosToken}`,
+      //     'Content-Type': 'application/json'
+      //   }
+      // }
       try{
-        return axios.post('http://localhost:8081/v1/users/', {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, password: 'facebook_password'}, config)
+        let response =  await axios.post(`${CONFIG.LUMEOS_SERVER}/v1/users/`, {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email/*+Math.random()*/, password: 'facebook_password'})
+        return response.data.user_id;
       }
       catch(err){
-        console.log(err)
+        console.log('could not create user, trying to find user in DB....', err);
+        let response = await axios.get(`${CONFIG.LUMEOS_SERVER}/v1/users/`, {params:{ queryEmail:this.state.email }});
+        return response.data[0].id;
+        
       }
         
     }
@@ -130,10 +141,7 @@ class Home extends React.Component {
     })
    .then(getFacebookUserData)
    .then(getUserId)
-   .then((response)=>{
-      console.log('this is response',response)
-      this.initializeReferralSaasquatchUser(response);
-    });
+   .then((response)=>{ this.initializeReferralSaasquatchUser(response) });
 
 }
 

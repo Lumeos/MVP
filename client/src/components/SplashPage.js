@@ -15,10 +15,8 @@ class Home extends React.Component {
     }
   }
 
-  async handleLogin(){
+  handleLogin(){
     this.setState({loggedin:true});
-    let response = await axios.post(`${CONFIG.LUMEOS_SERVER}/v1/login`, {"email" : "admin@lumeos.io", "password" : "test"});
-    window.sessionStorage.lumeosToken = response.data.token;
   }
 
 
